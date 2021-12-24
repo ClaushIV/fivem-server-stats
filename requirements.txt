@@ -1,0 +1,9 @@
+selenium
+bs4
+fastapi
+logging
+uvicorn
+selenium
+bs4
+html5lib
+pydantic
