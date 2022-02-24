@@ -20,8 +20,7 @@ async def get_server_data(data: schemas.QueryOptions) -> dict:
     soup= BeautifulSoup(driver.page_source, features="html5lib")
 
     async def remove_spaces(name: str) -> str:
-        name= name[1:]
-        name= name[:-1]
+        name= name[1:-1]
         return name
 
 
@@ -31,9 +30,11 @@ async def get_server_data(data: schemas.QueryOptions) -> dict:
             player_data=  player_data.replace(" Players (", "")
             player_data=  player_data.replace(") ", "")
             return player_data
+            
         except Exception as e:
             print(str(e))
-            raise HTTPException(s.HTTP_502_BAD_GATEWAY, detail= str(e))
+            raise HTTPException(
+                s.HTTP_502_BAD_GATEWAY, detail= "N\A")
 
     async def read_server_players() -> list:
         output= []
@@ -44,9 +45,11 @@ async def get_server_data(data: schemas.QueryOptions) -> dict:
                     name= await remove_spaces(str(il.text))
                     output.append(name)
             return output
+
         except Exception as e:
             print(str(e))
-            raise HTTPException(s.HTTP_502_BAD_GATEWAY, detail= str(e))         
+            raise HTTPException(
+                s.HTTP_502_BAD_GATEWAY, detail= "N\A")         
 
     async def read_server_resources() -> list:
         output= []
@@ -56,9 +59,11 @@ async def get_server_data(data: schemas.QueryOptions) -> dict:
                 for  il in ul.find_all("li"):
                     output.append(il.text)
             return output
+
         except Exception as e:
             print(str(e))
-            raise HTTPException(s.HTTP_502_BAD_GATEWAY, detail= str(e))
+            raise HTTPException(
+                s.HTTP_502_BAD_GATEWAY, detail= "N\A")
 
     async def read_server_name() -> str:
         s_name= ""
@@ -67,19 +72,23 @@ async def get_server_data(data: schemas.QueryOptions) -> dict:
             for div in server_name.find_all("div", {"class": "title"}):
                 s_name += div.text
             return s_name
+            
         except Exception as e:
             print(str(e))
-            raise HTTPException(s.HTTP_502_BAD_GATEWAY, detail= str(e))     
+            raise HTTPException(
+                s.HTTP_502_BAD_GATEWAY, detail= "N\A")     
     
     async def read_server_resource_count() -> str:
         try:
-            resource_count= soup.find_all("div", {"class": "title"})[-2].get_text()
+            resource_count=  soup.find_all("div", {"class": "title"})[-2].get_text()
             resource_count=  resource_count.replace(" Resources (", "")
             resource_count=  resource_count.replace(") ", "")
             return resource_count
+
         except Exception as e:
             print(str(e))
-            raise HTTPException(s.HTTP_502_BAD_GATEWAY, detail= str(e))
+            raise HTTPException(
+                s.HTTP_502_BAD_GATEWAY, detail= "N\A")
 
     try:
         output["name"] = await read_server_name()
@@ -92,8 +101,8 @@ async def get_server_data(data: schemas.QueryOptions) -> dict:
         if q_data["get_resources"] is True:
             output["resources"]  = await read_server_resources()
 
-
         return HTTPException(s.HTTP_200_OK, detail= output)
 
     except Exception as e:
-        raise HTTPException(s.HTTP_502_BAD_GATEWAY, detail= str(e))
+        raise HTTPException(
+                s.HTTP_502_BAD_GATEWAY, detail= "N\A")
