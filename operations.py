@@ -22,8 +22,7 @@ async def get_server_data(data: schemas.QueryOptions) -> dict:
     async def remove_spaces(name: str) -> str:
         name= name[1:-1]
         return name
-
-
+        
     async def read_server_player_count():
         try:
             player_data= soup.find_all("div", {"class": "title"})[-1].get_text()
